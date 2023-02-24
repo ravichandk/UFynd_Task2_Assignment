@@ -1,5 +1,7 @@
 ﻿using HotelRates.Excel.Repositories;
 using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace HotelRates.Excel.Repository.Tests
 {
@@ -9,8 +11,14 @@ namespace HotelRates.Excel.Repository.Tests
         [Test]
         public void MustFetchHoteRatesFromJSonFile()
         {
-            IHotelRatesInputRepository repository = new HotelRatesInputRepository();
-            repository.GetHotelRates();
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+            var hotelRatesJsonFile = $@"{basePath}\HotelRates.json";
+
+            using (var stream = new FileInfo(hotelRatesJsonFile).OpenRead())
+            {
+                IHotelRatesInputRepository repository = new HotelRatesInputRepository();
+                repository.GetHotelRates(stream);
+            }
         }
     }
 }

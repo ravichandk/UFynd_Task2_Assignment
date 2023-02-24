@@ -3,7 +3,7 @@
     /// <summary>
     /// Class that is used to deserialize the Hotel Rates JSON into a model 
     /// </summary>
-    public class HotelRatesJsonDto
+    public class HotelRatesInfoDto
     {
         public HotelInfoDto Hotel { get; set; }
 

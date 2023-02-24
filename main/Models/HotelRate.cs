@@ -10,8 +10,14 @@
 
         public DateTime? DepartureDate { get; set; }
 
-        public double? Price { get; set; }
+        public string Price { get; set; }
 
         public string Currency { get; set; }
+
+        public string RateName { get; set; }
+
+        public int? Adults { get; set; }
+
+        public bool BreakFastIncluded { get; set; }
     }
 }

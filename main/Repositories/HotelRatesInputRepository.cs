@@ -10,34 +10,26 @@ namespace HotelRates.Excel.Repositories
     /// </summary>
     public interface IHotelRatesInputRepository
     {
-        HotelRatesJsonDto GetHotelRates();
+        HotelRatesInfoDto GetHotelRates(Stream stream);
     }
     
     internal class HotelRatesInputRepository : IHotelRatesInputRepository
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HotelRatesInputRepository));
 
-        HotelRatesJsonDto IHotelRatesInputRepository.GetHotelRates()
+        HotelRatesInfoDto IHotelRatesInputRepository.GetHotelRates(Stream stream)
         {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+
             log.InfoFormat("Fetching hotel rates");
 
-            var basePath = AppDomain.CurrentDomain.BaseDirectory;
-            var hotelRatesJsonFile = $@"{basePath}\HotelRates.json";
-
-            if(!File.Exists(hotelRatesJsonFile))
-            {
-                log.WarnFormat("No file exists for fetching Hotel Rates");
-                return null;
-            }
-
-            HotelRatesJsonDto hotelRates = null;
+            HotelRatesInfoDto hotelRates = null;
 
             try
             {
-                using (var content = new FileInfo(hotelRatesJsonFile).OpenRead())
-                using (var streamReader = new StreamReader(content))
+                using (var streamReader = new StreamReader(stream))
                 {
-                    hotelRates = Newtonsoft.Json.JsonConvert.DeserializeObject<HotelRatesJsonDto>(streamReader.ReadToEnd());
+                    hotelRates = Newtonsoft.Json.JsonConvert.DeserializeObject<HotelRatesInfoDto>(streamReader.ReadToEnd());
                 }
             }
             catch (Exception ex)
