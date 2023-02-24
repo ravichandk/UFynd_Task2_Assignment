@@ -42,7 +42,7 @@ namespace HotelRates.Excel.Services
                 {
                     ArrivalDate = h.TargetDay,
                     DepartureDate = h.TargetDay?.AddDays(h.Los),
-                    Price = $"{(int)(h.Price?.NumericInteger / 100)},{(int)(h.Price?.NumericInteger % 100)}",
+                    Price = h.Price?.NumericFloat, //$"{(int)(h.Price?.NumericInteger / 100)},{(int)(h.Price?.NumericInteger % 100)}",
                     Currency = h.Price?.Currency,
                     RateName = h.RateName,
                     Adults = h.Adults,

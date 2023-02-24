@@ -10,7 +10,8 @@
 
         public DateTime? DepartureDate { get; set; }
 
-        public string Price { get; set; }
+        //public string Price { get; set; }
+        public double? Price { get; set; }
 
         public string Currency { get; set; }
 

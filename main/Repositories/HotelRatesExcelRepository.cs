@@ -1,7 +1,6 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using HotelRates.Excel.Models;
+﻿using HotelRates.Excel.Models;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace HotelRates.Excel.Repositories
 {
@@ -19,48 +18,68 @@ namespace HotelRates.Excel.Repositories
 
             var fileName = $@"C:\local\HotelRatesExcels\output_{DateTime.UtcNow.Ticks}.xlsx";
 
-            using (SpreadsheetDocument document = SpreadsheetDocument.Create(fileName, SpreadsheetDocumentType.Workbook))
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var excel = new ExcelPackage())
             {
-                WorkbookPart workbookPart = document.AddWorkbookPart();
-                workbookPart.Workbook = new Workbook();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
-                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-                var sheetData = new SheetData();
-                worksheetPart.Worksheet = new Worksheet(sheetData);
+                // setting the properties
+                // of the work sheet 
+                workSheet.TabColor = System.Drawing.Color.Black;
+                workSheet.DefaultRowHeight = 12;
 
-                Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-                Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Sheet1" };
+                // Setting the properties
+                // of the first row
+                workSheet.Row(1).Height = 20;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
 
-                sheets.Append(sheet);
+                // Header of the Excel sheet
+                workSheet.Cells[1, 1].Value = "ARRIVAL_DATE";
+                workSheet.Cells[1, 2].Value = "DEPARTURE_DATE";
+                workSheet.Cells[1, 3].Value = "PRICE";
+                workSheet.Cells[1, 4].Value = "CURRENCY";
+                workSheet.Cells[1, 5].Value = "RATENAME";
+                workSheet.Cells[1, 6].Value = "ADULTS";
+                workSheet.Cells[1, 7].Value = "BREAKFAST_INCLUDED";
 
-                Row headerRow = new Row();
-
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("ARRIVAL_DATE") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("DEPARTURE_DATE") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("PRICE") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("CURRENCY") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("RATENAME") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("ADULTS") });
-                headerRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue("BREAKFAT_INCLUDED") });
-
-                sheetData.AppendChild(headerRow);
+                // Inserting the article data into excel
+                // sheet by using the for each loop
+                // As we have values to the first row 
+                // we will start with second row
+                int recordIndex = 2;
 
                 foreach (var hotelRate in hotelRates)
                 {
-                    var newRow = new Row();
+                    workSheet.Cells[recordIndex, 1].Value = hotelRate.ArrivalDate;
+                    workSheet.Cells[recordIndex, 1].Style.Numberformat.Format = "yy.mm.dd";
+                    workSheet.Cells[recordIndex, 2].Value = hotelRate.DepartureDate;
+                    workSheet.Cells[recordIndex, 2].Style.Numberformat.Format = "yy.mm.dd";
+                    workSheet.Cells[recordIndex, 3].Value = hotelRate.Price;
+                    workSheet.Cells[recordIndex, 3].Style.Numberformat.Format = "0.00";
+                    workSheet.Cells[recordIndex, 4].Value = hotelRate.Currency;
+                    workSheet.Cells[recordIndex, 5].Value = hotelRate.RateName;
+                    workSheet.Cells[recordIndex, 6].Value = hotelRate.Adults;
+                    workSheet.Cells[recordIndex, 7].Value = hotelRate.BreakFastIncluded ? 1 : 0;
 
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.ArrivalDate?.ToShortDateString()) });
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.DepartureDate?.ToShortDateString()) });
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.Price?.ToString()) });
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.Currency)});
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.RateName)});
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.Adults?.ToString())});
-                    newRow.AppendChild(new Cell { DataType = CellValues.String, CellValue = new CellValue(hotelRate.BreakFastIncluded ? "1" : "0") });
-
-                    sheetData.AppendChild(newRow);
+                    recordIndex++;
                 }
 
-                workbookPart.Workbook.Save();
+                // By default, the column width is not set to auto fit for the content
+                // of the range, so we are usingAutoFit() method here. 
+                for (var i = 1; i <= 7; i++)
+                    workSheet.Column(i).AutoFit();
+
+                if (File.Exists(fileName))
+                    File.Delete(fileName);
+
+                // Create excel file on physical disk 
+                FileStream objFileStrm = File.Create(fileName);
+                objFileStrm.Close();
+
+                // Write content to excel file 
+                File.WriteAllBytes(fileName, excel.GetAsByteArray());
             }
 
             return fileName;
