@@ -5,7 +5,7 @@ namespace HotelRates.Excel.Services
 {
     public interface IHotelRatesService
     {
-        void GenerateExcel(Stream stream);
+        string GenerateExcel(Stream stream);
     }
 
     internal class HotelRatesService : IHotelRatesService
@@ -24,11 +24,11 @@ namespace HotelRates.Excel.Services
         /// Fetches data from JSON file and summarizes them into flattened data
         /// that can be written in an excel format
         /// </summary>
-        void IHotelRatesService.GenerateExcel(Stream stream)
+        string IHotelRatesService.GenerateExcel(Stream stream)
         {
             var hotelRatesInformation = _hotelRatesInputRepository.GetHotelRates(stream);
             var hotelRates = HotelRatesSummarizer.SummarizeHotelRates(hotelRatesInformation);
-            _hotelRatesExcelRepository.GeneratExcel(hotelRates);
+            return _hotelRatesExcelRepository.GeneratExcel(hotelRates);
         }
     }
 
@@ -42,7 +42,7 @@ namespace HotelRates.Excel.Services
                 {
                     ArrivalDate = h.TargetDay,
                     DepartureDate = h.TargetDay?.AddDays(h.Los),
-                    Price = h.Price?.NumericFloat, //$"{(int)(h.Price?.NumericInteger / 100)},{(int)(h.Price?.NumericInteger % 100)}",
+                    Price = h.Price?.NumericFloat,
                     Currency = h.Price?.Currency,
                     RateName = h.RateName,
                     Adults = h.Adults,

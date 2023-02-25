@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Console": {
+      "commandName": "Project",
+      "commandLineArgs": "E:\\Ravichand\\Germany\\UFynd_Assignment\\HotelRates.json"
+    }
+  }
+}
