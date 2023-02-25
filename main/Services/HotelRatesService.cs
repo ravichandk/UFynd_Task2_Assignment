@@ -1,6 +1,7 @@
-﻿using HotelRates.Excel.Models;
-using HotelRates.Excel.Repositories;
+﻿using HotelRates.Excel.Repositories;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleToAttribute("HotelRates.Excel.Services.Tests")]
 namespace HotelRates.Excel.Services
 {
     public interface IHotelRatesService
@@ -27,29 +28,8 @@ namespace HotelRates.Excel.Services
         string IHotelRatesService.GenerateExcel(Stream stream)
         {
             var hotelRatesInformation = _hotelRatesInputRepository.GetHotelRates(stream);
-            var hotelRates = HotelRatesSummarizer.SummarizeHotelRates(hotelRatesInformation);
+            var hotelRates = new HotelRatesSummarizer().SummarizeHotelRates(hotelRatesInformation);
             return _hotelRatesExcelRepository.GeneratExcel(hotelRates);
-        }
-    }
-
-    internal class HotelRatesSummarizer
-    {
-        public static IList<HotelRate> SummarizeHotelRates(HotelRatesInfoDto hotelRatesInfoDto)
-        {
-            var hotelRates = 
-                hotelRatesInfoDto?.HotelRates?
-                .Select(h => new HotelRate
-                {
-                    ArrivalDate = h.TargetDay,
-                    DepartureDate = h.TargetDay?.AddDays(h.Los),
-                    Price = h.Price?.NumericFloat,
-                    Currency = h.Price?.Currency,
-                    RateName = h.RateName,
-                    Adults = h.Adults,
-                    BreakFastIncluded = h.RateTags?.FirstOrDefault(r => r.Name?.Equals("breakfast", StringComparison.OrdinalIgnoreCase) ?? false) != null
-                }).ToList();
-
-            return hotelRates;
         }
     }
 }

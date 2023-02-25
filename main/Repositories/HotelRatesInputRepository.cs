@@ -3,6 +3,7 @@ using log4net;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleToAttribute("HotelRates.Excel.Repository.Tests")]
+[assembly: InternalsVisibleToAttribute("HotelRates.Excel.Services.Tests")]
 namespace HotelRates.Excel.Repositories
 {
     /// <summary>
