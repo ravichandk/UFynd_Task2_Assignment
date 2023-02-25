@@ -13,8 +13,10 @@ namespace HotelRates.Excel.Repositories
     {
         string IHotelRatesExcelRepository.GeneratExcel(IList<HotelRate> hotelRates)
         {
+            if (hotelRates == null || hotelRates.Count <= 0) return null;
+
             if (!Directory.Exists(@"C:\local")) Directory.CreateDirectory(@"C:\local");
-            if (!Directory.Exists(@"C:\local")) Directory.CreateDirectory(@"C:\local\HotelRatesExcels");
+            if (!Directory.Exists(@"C:\local\HotelRatesExcels")) Directory.CreateDirectory(@"C:\local\HotelRatesExcels");
 
             var fileName = $@"C:\local\HotelRatesExcels\output_{DateTime.UtcNow.Ticks}.xlsx";
 

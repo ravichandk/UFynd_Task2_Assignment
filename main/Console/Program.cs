@@ -8,6 +8,13 @@ class TestClass
 {
     static void Main(string[] args)
     {
+        //For testing purpose, the argument has been set to "Test".
+        //The program will use the HotelRates.json in the project
+        if(args.Length == 1 && args[0] == "Test")
+        {
+            args[0] = $"{AppDomain.CurrentDomain.BaseDirectory}/HotelRates.json";
+        }
+
         if(args.Length <= 0)
         {
             Console.WriteLine("File Name should be mentioned as the first argument");

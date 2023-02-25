@@ -1,4 +1,5 @@
-﻿using HotelRates.Excel.Repositories;
+﻿using HotelRates.Excel.Models;
+using HotelRates.Excel.Repositories;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -9,16 +10,27 @@ namespace HotelRates.Excel.Repository.Tests
     public class HotelRatesInputRepositoryTests
     {
         [Test]
-        public void MustFetchHoteRatesFromJSonFile()
+        public void Should_Fetch_HoteRates_From_JSonFile()
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             var hotelRatesJsonFile = $@"{basePath}\HotelRates.json";
+            HotelRatesInfoDto hotelRatesInfoDto = null; 
 
             using (var stream = new FileInfo(hotelRatesJsonFile).OpenRead())
             {
                 IHotelRatesInputRepository repository = new HotelRatesInputRepository();
-                repository.GetHotelRates(stream);
+                hotelRatesInfoDto = repository.GetHotelRates(stream);
             }
+
+            Assert.IsNotNull(hotelRatesInfoDto);
+            Assert.IsTrue(hotelRatesInfoDto.HotelRates.Length > 0);
+        }
+
+        [Test]
+        public void Should_Throw_Exception_When_Stream_Is_Empty()
+        {
+            IHotelRatesInputRepository repository = new HotelRatesInputRepository();
+            Assert.Throws<ArgumentNullException>(() => repository.GetHotelRates(null));
         }
     }
 }
