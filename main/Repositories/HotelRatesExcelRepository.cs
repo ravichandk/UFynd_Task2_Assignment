@@ -1,7 +1,7 @@
 ﻿using HotelRates.Excel.Models;
+using log4net;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System.Drawing;
 
 namespace HotelRates.Excel.Repositories
 {
@@ -12,11 +12,17 @@ namespace HotelRates.Excel.Repositories
 
     internal class HotelRatesExcelRepository : IHotelRatesExcelRepository
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(HotelRatesExcelRepository));
+
         string IHotelRatesExcelRepository.GeneratExcel(IList<HotelRate> hotelRates)
         {
             if (hotelRates == null || hotelRates.Count <= 0) return null;
 
+            log.InfoFormat("Started genertaing excel file.");
+
             var fileName = GenerateFileName();
+
+            log.InfoFormat($"excel file is being generated in the path {fileName}");
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -36,15 +42,18 @@ namespace HotelRates.Excel.Repositories
                 WriteToFile(fileName, excel);
             }
 
+            log.InfoFormat("Finished genertaing excel file.");
+
             return fileName;
         }
 
         private static string GenerateFileName()
         {
-            if (!Directory.Exists(@"C:\local")) Directory.CreateDirectory(@"C:\local");
-            if (!Directory.Exists(@"C:\local\HotelRatesExcels")) Directory.CreateDirectory(@"C:\local\HotelRatesExcels");
+            var tempDirectory = $@"{AppDomain.CurrentDomain.BaseDirectory}\HotelRatesExcels";
 
-            var fileName = $@"C:\local\HotelRatesExcels\output_{DateTime.UtcNow.Ticks}.xlsx";
+            if (!Directory.Exists(tempDirectory)) Directory.CreateDirectory(tempDirectory);
+
+            var fileName = $@"{tempDirectory}\output_{DateTime.UtcNow.Ticks}.xlsx";
             return fileName;
         }
 

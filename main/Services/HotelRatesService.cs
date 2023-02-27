@@ -1,4 +1,5 @@
 ﻿using HotelRates.Excel.Repositories;
+using log4net;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleToAttribute("HotelRates.Excel.Services.Tests")]
@@ -11,6 +12,8 @@ namespace HotelRates.Excel.Services
 
     internal class HotelRatesService : IHotelRatesService
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(HotelRatesService));
+
         private readonly IHotelRatesInputRepository _hotelRatesInputRepository;
         private readonly IHotelRatesExcelRepository _hotelRatesExcelRepository;
 
@@ -27,9 +30,20 @@ namespace HotelRates.Excel.Services
         /// </summary>
         string IHotelRatesService.GenerateExcel(Stream stream)
         {
-            var hotelRatesInformation = _hotelRatesInputRepository.GetHotelRates(stream);
-            var hotelRates = new HotelRatesSummarizer().SummarizeHotelRates(hotelRatesInformation);
-            return _hotelRatesExcelRepository.GeneratExcel(hotelRates);
+            string fileName = null;
+
+            try
+            {
+                var hotelRatesInformation = _hotelRatesInputRepository.GetHotelRates(stream);
+                var hotelRates = new HotelRatesSummarizer().SummarizeHotelRates(hotelRatesInformation);
+                fileName = _hotelRatesExcelRepository.GeneratExcel(hotelRates);
+            }
+            catch (Exception ex)
+            {
+                log.ErrorFormat($"Error while generating excel file from json data. \n Ex: {ex}");
+            }
+
+            return fileName;
         }
     }
 }

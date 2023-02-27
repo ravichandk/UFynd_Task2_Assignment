@@ -15,6 +15,7 @@ class TestClass
             args[0] = $"{AppDomain.CurrentDomain.BaseDirectory}/HotelRates.json";
         }
 
+        //The file [Full file path] that contains JSON content will taken as an input
         if (args.Length <= 0)
         {
             Console.WriteLine("File Name should be mentioned as the first argument");
@@ -45,6 +46,7 @@ class TestClass
             }
         }
 
+        //Reduce the storage automatically
         CleanOldFiles(excelGenerated);
     }
 
