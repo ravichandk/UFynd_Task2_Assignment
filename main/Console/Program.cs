@@ -52,10 +52,17 @@ class TestClass
 
     private static void CleanOldFiles(string excelGenerated)
     {
-        Directory
-                    .GetFiles(Path.GetDirectoryName(excelGenerated)).ToList()
-                    .Except(new[] { excelGenerated }).ToList()
-                    .ForEach(file => File.Delete(file));
+        try
+        {
+            Directory
+                        .GetFiles(Path.GetDirectoryName(excelGenerated)).ToList()
+                        .Except(new[] { excelGenerated }).ToList()
+                        .ForEach(file => File.Delete(file));
+        }
+        catch (Exception ex)
+        {
+            //As this is an do good operation, it should not impact the main process.
+        }
     }
 }
 
