@@ -201,3 +201,4 @@ src/.vs
 /.vs
 src/Tools/ehm-cli/__pycache__/
 /tests/Repositories.Tests/Coverage
+/tests/Services.Tests/Coverage

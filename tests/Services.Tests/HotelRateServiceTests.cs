@@ -14,10 +14,15 @@ namespace HotelRates.Excel.Services.Tests
             var hotelRatesInputRepository = new Mock<IHotelRatesInputRepository>();
             var hotelRatesExcelRepository = new Mock<IHotelRatesExcelRepository>();
 
+            Assert.Throws<ArgumentNullException>(() => new HotelRatesService(null, hotelRatesExcelRepository.Object));
+            Assert.Throws<ArgumentNullException>(() => new HotelRatesService(hotelRatesInputRepository.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new HotelRatesService(null, null));
+
             hotelRatesInputRepository.Setup(x => x.GetHotelRates(null)).Throws<ArgumentNullException>();
 
             IHotelRatesService hoteRatesService = new HotelRatesService(hotelRatesInputRepository.Object, hotelRatesExcelRepository.Object);
-            Assert.Throws<ArgumentNullException>(() => hoteRatesService.GenerateExcel(null));
+            var output = hoteRatesService.GenerateExcel(null);
+            Assert.IsNull(output);
         }
 
         [Test]
