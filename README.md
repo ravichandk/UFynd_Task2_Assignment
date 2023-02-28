@@ -9,17 +9,6 @@ The code is completely independent and self-contained. The code can be analyzed 
 
 The project can be run from the command line.
 
-
-# Hotel Rates Reporting
-
-This repository contains the code that takes raw data in a JSON format as input and generates an excel by summarizing the hotel rates.
-
-## Using the Sample Code
-
-The code is completely independent and self-contained. The code can be analyzed to get an understanding of how a particular method works.
-
-The project can be run from the command line.
-
 ## Running the samples from the Command Line
 * Clone this repository:
 ```
