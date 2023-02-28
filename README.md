@@ -39,7 +39,7 @@ The project can be run from the command line.
      * Microsoft.Extensions.Hosting.Windows
      * System.Net.Mail
 
-Following is the code snippet that can be used to run the background service continously
+Following is the code snippet that can be used to run the background service continuously
 
 ```csharp
 protected override async Task ExecuteAsync(CancellationToken stoppingToken)
