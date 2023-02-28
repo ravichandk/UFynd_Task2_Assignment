@@ -49,7 +49,7 @@ namespace HotelRates.Excel.Repositories
 
         private static string GenerateFileName()
         {
-            var tempDirectory = $@"{AppDomain.CurrentDomain.BaseDirectory}\HotelRatesExcels";
+            var tempDirectory = $@"{AppDomain.CurrentDomain.BaseDirectory}HotelRatesExcels";
 
             if (!Directory.Exists(tempDirectory)) Directory.CreateDirectory(tempDirectory);
 

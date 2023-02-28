@@ -11,16 +11,16 @@ namespace HotelRates.Excel.Repositories
     /// </summary>
     public interface IHotelRatesInputRepository
     {
-        HotelRatesInfoDto GetHotelRates(Stream stream);
+        HotelRatesInfoDto GetHotelRates(Stream jsonFileStream);
     }
     
     internal class HotelRatesInputRepository : IHotelRatesInputRepository
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HotelRatesInputRepository));
 
-        HotelRatesInfoDto IHotelRatesInputRepository.GetHotelRates(Stream stream)
+        HotelRatesInfoDto IHotelRatesInputRepository.GetHotelRates(Stream jsonFileStream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            if (jsonFileStream is null) throw new ArgumentNullException(nameof(jsonFileStream));
 
             log.InfoFormat("Fetching hotel rates");
 
@@ -28,7 +28,7 @@ namespace HotelRates.Excel.Repositories
 
             try
             {
-                using (var streamReader = new StreamReader(stream))
+                using (var streamReader = new StreamReader(jsonFileStream))
                 {
                     hotelRates = Newtonsoft.Json.JsonConvert.DeserializeObject<HotelRatesInfoDto>(streamReader.ReadToEnd());
                 }

@@ -38,26 +38,29 @@ class TestClass
         {
             var hotelRatesService = provider.GetService<IHotelRatesService>();
 
-            using (var stream = new FileInfo(args[0]).OpenRead())
+            using (var jsonFileStream = new FileInfo(args[0]).OpenRead())
             {
-                excelGenerated = hotelRatesService.GenerateExcel(stream);
+                excelGenerated = hotelRatesService.GenerateExcel(jsonFileStream);
 
                 Process.Start("explorer", excelGenerated);
             }
         }
 
         //Reduce the storage automatically
-        CleanOldFiles(excelGenerated);
+        CleanOldFiles(excelGenerated, f => f.CreationTimeUtc <= DateTime.UtcNow.AddDays(-2));
     }
 
-    private static void CleanOldFiles(string excelGenerated)
+    private static void CleanOldFiles(string currentFileGenerated, Func<FileInfo, bool> predicate)
     {
         try
         {
+            //Deleting files that are older than 2 days.
+            //This can be custommizable based on the data generated
             Directory
-                        .GetFiles(Path.GetDirectoryName(excelGenerated)).ToList()
-                        .Except(new[] { excelGenerated }).ToList()
-                        .ForEach(file => File.Delete(file));
+                .GetFiles(Path.GetDirectoryName(currentFileGenerated)).ToList()
+                .Select(f => new FileInfo(f)).ToList()
+                .Where(predicate).ToList()
+                .ForEach(file => file.Delete());
         }
         catch (Exception ex)
         {
