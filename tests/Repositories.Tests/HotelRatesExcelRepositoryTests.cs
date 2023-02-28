@@ -31,9 +31,11 @@ namespace HotelRates.Excel.Repository.Tests
         [Test]
         public void Should_return_null_when_Input_Is_A_Valid_List()
         {
-            if (Directory.Exists(@"C:\local\HotelRatesExcels"))
+            var tempDirectory = $@"{AppDomain.CurrentDomain.BaseDirectory}HotelRatesExcels";
+
+            if (Directory.Exists(tempDirectory))
             {
-                Directory.Delete(@"C:\local\HotelRatesExcels", true);
+                Directory.Delete(tempDirectory, true);
             }
 
             var hotelRates = new List<HotelRate>()

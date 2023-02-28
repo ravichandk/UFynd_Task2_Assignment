@@ -200,3 +200,4 @@ src/.vs
 *.DotSettings
 /.vs
 src/Tools/ehm-cli/__pycache__/
+/tests/Repositories.Tests/Coverage

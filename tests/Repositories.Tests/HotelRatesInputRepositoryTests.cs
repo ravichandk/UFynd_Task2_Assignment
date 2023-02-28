@@ -32,5 +32,16 @@ namespace HotelRates.Excel.Repository.Tests
             IHotelRatesInputRepository repository = new HotelRatesInputRepository();
             Assert.Throws<ArgumentNullException>(() => repository.GetHotelRates(null));
         }
+
+        [Test]
+        public void Should_Throw_Exception_When_JSon_Invalid()
+        {
+            using (var stream = new FileInfo($@"{AppDomain.CurrentDomain.BaseDirectory}\Invalid.json").OpenRead())
+            {
+                IHotelRatesInputRepository repository = new HotelRatesInputRepository();
+                var output = repository.GetHotelRates(stream);
+                Assert.IsNull(output);
+            }
+        }
     }
 }

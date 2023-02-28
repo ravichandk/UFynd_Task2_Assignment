@@ -12,10 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ExecCodeCoverage.ps1" />
     <None Remove="HotelRates.json" />
+    <None Remove="Invalid.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Invalid.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="HotelRates.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -23,9 +28,17 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeCoverage" Version="17.5.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.131" />
+    <PackageReference Include="ReportGenerator" Version="5.1.18" />
   </ItemGroup>
 
   <ItemGroup>
